@@ -1,6 +1,6 @@
 // Creating map object
 var myMap = L.map("map", {
-  center: [27.6648, -81.5158],
+  center: [32.1656, -82.9001],
   zoom: 12
 });
 
@@ -15,7 +15,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 // Load in geojson data
 //var geoData = "static/data/ny_new_york_zip_codes_geo.min.json";
-var geoData = 'static/data/fl_merge.json';
+var geoData = 'static/data/ga_merge.json';
 
 var geojson;
 
@@ -27,7 +27,7 @@ d3.json(geoData, function(data) {
   geojson = L.choropleth(data, {
 
     // Define what  property in the features to use
-    valueProperty: "2014-01-31",
+    valueProperty: "2021-04-30",
 
     // Set color scale
     scale: ["#ffffb2", "#b10026"],
