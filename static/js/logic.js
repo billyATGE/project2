@@ -1,7 +1,7 @@
 // Creating map object
 var myMap = L.map("map", {
   center: [32.1656, -82.9001],
-  zoom: 12
+  zoom: 8
 });
 
 L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -47,7 +47,7 @@ d3.json(geoData, function(data) {
     // Binding a pop-up to each layer
     onEachFeature: function(feature, layer) {
       
-      layer.bindPopup("Zip Code: " + feature.properties.ZCTA5CE10 + "<br>Median single family home price: $" + feature.properties["2021-04-30"]+ "<br>City : " + feature.properties.City + "<br>County : " +feature.properties.CountyName);
+      layer.bindPopup("Zip Code: " + feature.properties.ZCTA5CE10 + "<br>Median single family home price: $" + feature.properties["2021-04-30"]+ "<br>City : " + feature.properties.City + "<br>County : " +feature.properties.CountyName + "<br> Household Income : $" + feature.properties.Household_Income + "<br> Poverty Rate: " + feature.properties.Poverty_Rate.toFixed(0) +"%");
     }
   }).addTo(myMap);
 
