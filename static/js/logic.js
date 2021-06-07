@@ -1,50 +1,12 @@
 
 var countyLayer = []
 var heatLayer =[]
+var legend2 = L.control({ position: 'bottomright' });
+var legend = L.control({ position: 'bottomright' });
 function monthlyPayment(p, n, i) {
   return p * i * (Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 }
-//
-function getRadius(){
-  var radius;
-  if (currentZoom === 7){
-      radius=2
-  }
-  else if (currentZoom === 8) {
-      radius = 4;
-  }
-  else if (currentZoom === 9) {
-      radius = 6;
-  }
-  else if (currentZoom === 10) {
-      radius = 8;
-  }
-  else if (currentZoom === 11) {
-      radius = 10;
-  }
-  else if (currentZoom === 12) {
-      radius = 12;
-  }
-  else if (currentZoom === 13) {
-      radius = 14;
-  }
-  else if (currentZoom === 14) {
-      radius = 16;
-  }
-  else if (currentZoom === 15) {
-      radius = 18;
-  }
-  else if (currentZoom === 16) {
-      radius = 20;
-  }
-  else if (currentZoom === 17) {
-      radius = 22;
-  }
-  else if (currentZoom === 18) {
-      radius = 24;
-  }
-  return radius;
-}
+
 //
 
 function createMap(heatArray, geojson) {
@@ -88,38 +50,40 @@ var overlay = {
   "Heat Map": heatArray,
   "Fault Lines": geojson,
 }
-
+console.log(geojson)
 L.control.layers(basemaps, overlay).addTo(myMap)
 
 // This function determines the color of the marker based on the magnitude of the earthquake.
 function getColor(magnitude) {
+  //console.log(magnitude)
   switch (true) {
+    case magnitude > 40:
+      return "#FF00FF";
+    case magnitude > 30:
+      return "#FF0000";
+    case magnitude > 20:
+      return "#FFFF00";
+    case magnitude > 15:
+      return "#00FF00";
+    case magnitude > 10:
+      return "#00FFFF";
     case magnitude > 5:
-      return "#ea2c2c";
-    case magnitude > 4:
-      return "#ea822c";
-    case magnitude > 3:
-      return "#ee9c00";
-    case magnitude > 2:
-      return "#eecc00";
-    case magnitude > 1:
-      return "#d4ee00";
+      return "#0000FF";
     default:
-      return "#98ee00";
+      return "#FFFFFF";
   }
 }
 
-//add legend on Bottom Right Corner
-var legend = L.control({ position: 'bottomright' });
+
 
 legend.onAdd = function () {
-  //Dom Utility that puts legend into DIV & Info Legend
+  
   var div = L.DomUtil.create('div', 'info legend'),
-    //Magnitude Grades, stops at 5 magnitude
-    grades = [0, 1, 2, 3, 4, 5];
+
+    grades = [0, 5, 10, 15, 20, 30, 40];
 
   //Legend Label Earthquake <break> Magnitude  
-  div.innerHTML += 'Eathquake<br>Magnitude<br><hr>'
+  div.innerHTML += 'Poverty Rate<br>'
 
   // loop through our density intervals and generate a label with a colored square for each interval
   for (var i = 0; i < grades.length; i++) {
@@ -152,7 +116,7 @@ var geojson;
 
 // Grab data with d3
 d3.json(geoData, function(data) {
- console.log(data)
+ //console.log(data)
  var countyLines = new L.LayerGroup()
  var heatLines = new L.LayerGroup()
  //
@@ -175,17 +139,19 @@ d3.json(geoData, function(data) {
       var intrest = 3.25/100/12
       var mp = monthlyPayment(hp, 360, intrest )
       var ob = 100*(mp/mx)
-      console.log(mp)
+      //console.log(mp)
       heatArray.push([lat, long, par]);
       heatdetails.push([lat, long, pr, hi, hp, ci, cn, mx, mp,ob ])
     }
     
   }
-  console.log(heatArray)
+  //console.log(heatArray)
   var heat = L.heatLayer(heatArray, {
     radius: 35,
     opacity: 1,
-    gradient: {0.05: "rgb(0,0,255)",
+    gradient: {
+              0.01: "rgb(255,255,255)",
+              0.05: "rgb(0,0,255)",
               0.10: "rgb(0,255,255)",
               0.15: "rgb(0,255,0)",
               0.20: "rgb(255,255,0)",
@@ -247,8 +213,8 @@ d3.json(geoData, function(data) {
 
   
   // Set up the legend
-  var legend = L.control({ position: "bottomright" });
-  legend.onAdd = function() {
+  
+  legend2.onAdd = function() {
     var div = L.DomUtil.create("div", "info legend");
     var limits = geojson.options.limits;
     var colors = geojson.options.colors;
@@ -270,8 +236,8 @@ d3.json(geoData, function(data) {
     div.innerHTML += "<ul>" + labels.join("") + "</ul>";
     return div;
   };
-
+  
   // Adding legend to the map
-  legend.addTo(myMap);
+  legend2.addTo(myMap);
 
 });
